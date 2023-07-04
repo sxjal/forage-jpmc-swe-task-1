@@ -1,0 +1,136 @@
+From 879221fec2b863d37d5b493f02a530a8098ef6ef Mon Sep 17 00:00:00 2001
+From: Joe Ferrer <joe@theforage.com>
+Date: Wed, 1 Mar 2023 00:11:51 +1100
+Subject: [PATCH 1/3] Re-add sample unit test
+
+---
+ client_test.py | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 client_test.py
+
+diff --git a/client_test.py b/client_test.py
+new file mode 100644
+index 0000000..af2bf26
+--- /dev/null
++++ b/client_test.py
+@@ -0,0 +1,25 @@
++import unittest
++from client3 import getDataPoint
++
++class ClientTest(unittest.TestCase):
++  def test_getDataPoint_calculatePrice(self):
++    quotes = [
++      {'top_ask': {'price': 121.2, 'size': 36}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 120.48, 'size': 109}, 'id': '0.109974697771', 'stock': 'ABC'},
++      {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
++    ]
++    """ ------------ Add the assertion below ------------ """
++
++  def test_getDataPoint_calculatePriceBidGreaterThanAsk(self):
++    quotes = [
++      {'top_ask': {'price': 119.2, 'size': 36}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 120.48, 'size': 109}, 'id': '0.109974697771', 'stock': 'ABC'},
++      {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
++    ]
++    """ ------------ Add the assertion below ------------ """
++
++
++  """ ------------ Add more unit tests ------------ """
++
++
++
++if __name__ == '__main__':
++    unittest.main()
+-- 
+2.39.2 (Apple Git-143)
+
+
+From cba0a4bbb0932741a79329192dce4748145e3879 Mon Sep 17 00:00:00 2001
+From: sajal <sajalsahu8@gmail.com>
+Date: Mon, 3 Jul 2023 23:20:03 +0400
+Subject: [PATCH 2/3] final file
+
+---
+ client3.py | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/client3.py b/client3.py
+index 3fc09b7..8dc5ccb 100644
+--- a/client3.py
++++ b/client3.py
+@@ -35,14 +35,18 @@ def getDataPoint(quote):
+     stock = quote['stock']
+     bid_price = float(quote['top_bid']['price'])
+     ask_price = float(quote['top_ask']['price'])
+-    price = bid_price
++    price = (bid_price + ask_price) / 2
+     return stock, bid_price, ask_price, price
+ 
+ 
+ def getRatio(price_a, price_b):
+     """ Get ratio of price_a and price_b """
+     """ ------------- Update this function ------------- """
+-    return 1
++
++    if price_b == 0 : 
++        return
++    
++    return price_a/price_b
+ 
+ 
+ # Main
+@@ -52,8 +56,10 @@ if __name__ == "__main__":
+         quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
+ 
+         """ ----------- Update to get the ratio --------------- """
++        prices = {}
+         for quote in quotes:
+             stock, bid_price, ask_price, price = getDataPoint(quote)
++            prices[stock] = price
+             print("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
+ 
+         print("Ratio %s" % getRatio(price, price))
+-- 
+2.39.2 (Apple Git-143)
+
+
+From a1bbf18ca417878c461b62d0c9814f2137304bbe Mon Sep 17 00:00:00 2001
+From: sajal <sajalsahu8@gmail.com>
+Date: Tue, 4 Jul 2023 17:31:06 +0400
+Subject: [PATCH 3/3] final commit
+
+---
+ .DS_Store  | Bin 0 -> 6148 bytes
+ client3.py |   2 +-
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ create mode 100644 .DS_Store
+
+diff --git a/.DS_Store b/.DS_Store
+new file mode 100644
+index 0000000000000000000000000000000000000000..d70088efed9a6b277d9462a7658b65e067ad46f2
+GIT binary patch
+literal 6148
+zcmeHKO-sW-5PcIXv<lLr7a_kOApU_^(t`&t`U8}HAVO-@rbTbL`-?s4o86(9q+UhJ
+z49vdW$-HdxcFAM`$Y?z~2ZjLpbj4)AW{2r@^^PSLIV4KB#}g{t(dSrovOVx070|Ui
+z!4xGPxoSVxuR?}rykC{e>7-mvn5UcMlAe79V-FbM24hAGToW@aFl#d8ti>4Ol{39y
+z%^9_~uz6QxS9n9!;(xUGN8DR;GB=^U*!7h1+2ZtVPwG2O$=@{RNFG}G9J;vzu7E4B
+z#|p4!tM!i~dg}_f0<OST0sTItbj94Tju<{2Y{C(M*kd>t`}&)xoYXKktRwOYO(K;T
+zsbWVAiFC$O%gYVxh>;Gl!-v?+VkZ;{v-AFGNQdMRy>$g#fu;fnaX8faKmPsv-z53S
+z6>tUiN&)E=x5bFBWVN;Pa$0Ls`aNAu^XiCO3Ok_`GgnLTDLokDsdk9DVI7eXn*Rs{
+L8N6`?{#1c)0Z~+T
+
+literal 0
+HcmV?d00001
+
+diff --git a/client3.py b/client3.py
+index 8dc5ccb..93ab49d 100644
+--- a/client3.py
++++ b/client3.py
+@@ -62,4 +62,4 @@ if __name__ == "__main__":
+             prices[stock] = price
+             print("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
+ 
+-        print("Ratio %s" % getRatio(price, price))
++        print("Ratio %s" % getRatio(price, price))
+\ No newline at end of file
+-- 
+2.39.2 (Apple Git-143)
+
